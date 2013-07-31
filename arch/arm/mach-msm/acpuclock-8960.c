@@ -134,7 +134,7 @@ static struct acpu_level acpu_freq_tbl_slow[] __initdata = {
 	{ 1, {   918000, HFPLL, 1, 0x22 }, L2(6),  1100000 },
 	{ 1, {   972000, HFPLL, 1, 0x24 }, L2(6),  1125000 },
 	{ 1, {  1026000, HFPLL, 1, 0x26 }, L2(6),  1125000 },
-	{ 1, {  1080000, HFPLL, 1, 0x28 }, L2(18), 1175000, AVS(0x400015) },
+
 #if defined(CONFIG_MSM_DCVS_FOR_MSM8260A)
 	{ 0, {  1080000, HFPLL, 1, 0x28 }, L2(18), 1175000, AVS(0x400015) },
 	{ 1, {  1134000, HFPLL, 1, 0x2A }, L2(18), 1175000, AVS(0x400015) },
@@ -156,7 +156,7 @@ static struct acpu_level acpu_freq_tbl_slow[] __initdata = {
 	{ 1, {  1458000, HFPLL, 1, 0x36 }, L2(18), 1237500, AVS(0x100018) },
 	{ 1, {  1512000, HFPLL, 1, 0x38 }, L2(18), 1250000, AVS(0x400012) },
 	{ 1, {  1674000, HFPLL, 1, 0x3E }, L2(19), 1250000, AVS(0x400012) },
-#endifl
+#endif
 	{ 0, { 0 } }
 };
 
@@ -175,6 +175,7 @@ static struct acpu_level acpu_freq_tbl_nom[] __initdata = {
 	{ 1, {   918000, HFPLL, 1, 0x22 }, L2(6),  1050000 },
 	{ 1, {   972000, HFPLL, 1, 0x24 }, L2(6),  1075000 },
 	{ 1, {  1026000, HFPLL, 1, 0x26 }, L2(6),  1075000 },
+
 #if defined(CONFIG_MSM_DCVS_FOR_MSM8260A)
         { 0, {  1080000, HFPLL, 1, 0x28 }, L2(18), 1125000, AVS(0x400015) },
         { 1, {  1134000, HFPLL, 1, 0x2A }, L2(18), 1125000, AVS(0x400015) },
