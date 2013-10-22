@@ -1021,12 +1021,9 @@ void limSendHalEndScanReq(tpAniSirGlobal pMac, tANI_U8 channelNum, tLimLimHalSca
 
     /**
      * The End scan request to be sent only if End Scan is not already requested or
-     * Start scan is not already requestd.
-     * after finish scan rsp from firmware host is sending endscan request so adding
-     * check for IDLE SCAN STATE also added to avoid this issue
+     * Start scan is not already requestd
      */
     if((pMac->lim.gLimHalScanState != eLIM_HAL_END_SCAN_WAIT_STATE)  &&
-       (pMac->lim.gLimHalScanState != eLIM_HAL_IDLE_SCAN_STATE)  &&
             (pMac->lim.gLimHalScanState != eLIM_HAL_START_SCAN_WAIT_STATE))
     {
         pEndScanParam = vos_mem_malloc(sizeof(*pEndScanParam));
@@ -3941,7 +3938,7 @@ limProcessJoinFailureTimeout(tpAniSirGlobal pMac)
 
     if((psessionEntry = peFindSessionBySessionId(pMac, pMac->lim.limTimers.gLimJoinFailureTimer.sessionId))== NULL) 
     {
-        limLog(pMac, LOGE, FL("Session Does not exist for given sessionID"));
+        limLog(pMac, LOGP,FL("Session Does not exist for given sessionID"));
         return;
     }
 

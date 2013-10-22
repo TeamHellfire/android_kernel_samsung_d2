@@ -549,6 +549,9 @@ typedef enum
     eCSR_ROAM_RESULT_TEARDOWN_TDLS_PEER_IND,
     eCSR_ROAM_RESULT_DELETE_ALL_TDLS_PEER_IND,
     eCSR_ROAM_RESULT_LINK_ESTABLISH_REQ_RSP,
+#ifdef FEATURE_WLAN_TDLS_OXYGEN_DISAPPEAR_AP
+    eCSR_ROAM_RESULT_TDLS_DISAPPEAR_AP_IND,
+#endif
 #endif
 
 }eCsrRoamResult;
@@ -1102,8 +1105,7 @@ typedef struct tagCsrConfigParam
 
     tANI_U8   enableTxLdpc;
 
-    tANI_U8 isAmsduSupportInAMPDU;
-
+    tANI_BOOLEAN  enableOxygenNwk;
 }tCsrConfigParam;
 
 //Tush
