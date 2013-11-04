@@ -30,7 +30,6 @@
 #include <linux/fb.h>
 #include <linux/msm_mdp.h>
 #include <linux/file.h>
-#include <linux/android_pmem.h>
 #include <linux/major.h>
 #include <asm/system.h>
 #include <asm/mach-types.h>
@@ -322,6 +321,8 @@ int mdp4_overlay_iommu_map_buf(int mem_id,
 	struct ion_handle **srcp_ihdl)
 {
 	struct mdp4_iommu_pipe_info *iom;
+	unsigned long size = 0, map_size = 0;
+	int ret;
 
 	if (!display_iclient)
 		return -EINVAL;
@@ -336,8 +337,15 @@ int mdp4_overlay_iommu_map_buf(int mem_id,
 		pipe->pipe_ndx, plane);
 
 	if(mdp4_overlay_format2type(pipe->src_format) == OVERLAY_TYPE_RGB) {
+		ret = ion_handle_get_size(display_iclient, *srcp_ihdl, &size);
+		if (ret)
+			pr_err("ion_handle_get_size failed with ret %d\n", ret);
+		map_size = mdp_iommu_max_map_size;
+		if(map_size < size)
+			map_size = size;
+
 		if (ion_map_iommu(display_iclient, *srcp_ihdl,
-				DISPLAY_READ_DOMAIN, GEN_POOL, SZ_4K, MDP_IOMMU_OVERMAP_SIZE, start,
+				DISPLAY_READ_DOMAIN, GEN_POOL, SZ_4K, map_size, start,
 				len, 0, 0)) {
 			ion_free(display_iclient, *srcp_ihdl);
 			pr_err("%s(): ion_map_iommu() failed\n",
@@ -3414,9 +3422,6 @@ static int get_img(struct msmfb_data *img, struct fb_info *info,
 {
 	struct file *file;
 	int put_needed, ret = 0, fb_num;
-#ifdef CONFIG_ANDROID_PMEM
-	unsigned long vstart;
-#endif
 	*p_need = 0;
 
 	if (img->flags & MDP_BLIT_SRC_GEM) {
@@ -3450,13 +3455,6 @@ static int get_img(struct msmfb_data *img, struct fb_info *info,
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
 	return mdp4_overlay_iommu_map_buf(img->memory_id, pipe, plane,
 		start, len, srcp_ihdl);
-#endif
-#ifdef CONFIG_ANDROID_PMEM
-	if (!get_pmem_file(img->memory_id, start, &vstart,
-					    len, srcp_file))
-		return 0;
-	else
-		return -EINVAL;
 #endif
 }
 

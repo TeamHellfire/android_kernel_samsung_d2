@@ -1650,7 +1650,8 @@ static int adreno_start(struct kgsl_device *device)
 	/* Set up a2xx special case */
 
 	/* Certain targets need the fixup.  You know who you are */
-	if (adreno_is_a305(adreno_dev) || adreno_is_a320(adreno_dev))
+	if (adreno_is_a305(adreno_dev) ||
+	   (adreno_is_a320(adreno_dev) && !soc_class_is_apq8064()))
 		adreno_a3xx_pwron_fixup_init(adreno_dev);
 
 	/* Set the bit to indicate that we've just powered on */
@@ -3069,6 +3070,11 @@ int adreno_idle(struct kgsl_device *device)
 	kgsl_cffdump_regpoll(device->id,
 		adreno_dev->gpudev->reg_rbbm_status << 2,
 		0x00000000, 0x80000000);
+
+
+	/* If the device clock is off, it's already idle. Don't wake it up */
+	if (!kgsl_pwrctrl_isenabled(device))
+		return 0;
 
 retry:
 	/* First, wait for the ringbuffer to drain */
