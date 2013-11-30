@@ -1677,6 +1677,7 @@ int regulatory_hint_user(const char *alpha2)
 
 	return 0;
 }
+EXPORT_SYMBOL(regulatory_hint_user);
 
 /* Driver hints */
 int regulatory_hint(struct wiphy *wiphy, const char *alpha2)
@@ -2216,10 +2217,15 @@ static int __set_regdom(const struct ieee80211_regdomain *rd)
 		 * However if a driver requested this specific regulatory
 		 * domain we keep it for its private use
 		 */
-		if (last_request->initiator == NL80211_REGDOM_SET_BY_DRIVER)
+		if (last_request->initiator == NL80211_REGDOM_SET_BY_DRIVER) {
+			const struct ieee80211_regdomain *tmp;
+
+			tmp = request_wiphy->regd;
 			request_wiphy->regd = rd;
-		else
+			kfree(tmp);
+		} else {
 			kfree(rd);
+		}
 
 		rd = NULL;
 
