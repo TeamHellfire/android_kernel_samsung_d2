@@ -53,6 +53,12 @@
 /* Disable EARLYSUSPEND for mdp driver */
 #define DISABLE_EARLY_SUSPEND
 
+#define MSM_FB_BL_SCALE_MAX 1024
+#define MSM_FB_BL_LEVEL_MAX 255
+#define MSM_FB_HISTOGRAM_FRAME_COUNT_MAX 0x20
+#define MSM_FB_HISTOGRAM_BIT_MASK_MAX 0x4
+#define MSM_FB_HISTOGRAM_BIN_NUM 128
+
 struct disp_info_type_suspend {
 	boolean op_enable;
 	boolean sw_refreshing_enable;
