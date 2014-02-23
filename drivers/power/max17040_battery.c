@@ -392,10 +392,7 @@ static void max17040_set_rcomp(struct i2c_client *client, u16 new_rcomp)
 							swab16(new_rcomp));
 
 	mutex_unlock(&chip->mutex);
-	if (chip->pdata && chip->pdata->battery_online)
-		chip->online = chip->pdata->battery_online();
-	else
-		chip->online = 1;
+
 }
 
 static u16 max17048_get_register_word(struct i2c_client *client, int reg)
@@ -419,11 +416,6 @@ static void max17048_set_register_word(struct i2c_client *client,
 
 	mutex_lock(&chip->mutex);
 
-	if (!chip->pdata || !chip->pdata->charger_online
-			|| !chip->pdata->charger_enable) {
-		chip->status = POWER_SUPPLY_STATUS_UNKNOWN;
-		return;
-	}
 
 	i2c_smbus_write_word_data(client, reg,
 							swab16(reg_value));
